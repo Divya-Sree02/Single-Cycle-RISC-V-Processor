@@ -3,8 +3,7 @@
 A 32-bit RISC-V processor implemented in **SystemVerilog using AMD Xilinx Vivado 2022.2**. This project demonstrates processor datapath design, instruction decoding, arithmetic and logical execution, branching, memory access, and register write-back through a modular single-cycle architecture.
 
 The design is organized into independent hardware modules to make the internal working of a processor easier to understand and extend.
-
-![Single-Cycle RISC-V Processor Architecture](docs/architecture.png)
+ 
 
 ## Table of Contents
 
