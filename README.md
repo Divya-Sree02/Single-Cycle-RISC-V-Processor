@@ -177,29 +177,37 @@ The write-back logic selects the ALU result, load result, or `PC + 4`. `LUI` and
 
 ## Instruction Execution Flowchart
 
-```mermaid
 flowchart TD
-    A(["Start: Current PC"]) --> B["Fetch instruction"]
-    B --> C["Decode opcode and fields"]
-    C --> D["Read source registers"]
-    D --> E["Generate immediate"]
-    E --> F["Execute ALU operation"]
-    F --> G{"Instruction type?"}
+    A(["Current PC"]) --> B["Fetch instruction"]
+    B --> C["Decode instruction and generate controls"]
+    C --> D["Read source registers and generate immediate"]
+    D --> E["Execute operation / calculate address"]
+    E --> F{"Instruction class"}
 
-    G -->|"Load"| H["Read data memory"]
-    G -->|"Store"| I["Write selected bytes"]
-    G -->|"Arithmetic / logic"| J["Select ALU result"]
-    G -->|"Branch / jump"| K["Calculate target and next PC"]
+    F -->|Arithmetic or logic| G["Select ALU result"]
+    F -->|Load| H["Read Data Memory"]
+    H --> I["Format load data"]
+    F -->|Store| J["Generate byte enables and store data"]
+    J --> K["Write Data Memory"]
+    F -->|Conditional branch| L["Evaluate branch condition"]
+    F -->|JAL or JALR| M["Calculate jump target"]
 
-    H --> L["Select write-back value"]
-    J --> L
-    K --> M["Select next PC"]
-    I --> M
-    L --> N["Write destination register"]
-    N --> M
-    M --> O(["Next clock cycle"])
-    O --> B
-```
+    G --> N["Select write-back value"]
+    I --> N
+    M --> N
+    N --> O["Write destination register"]
+    
+    L --> P{"Branch taken?"}
+    P -->|Yes| Q["Select branch target"]
+    P -->|No| R["Select PC + 4"]
+    Q --> S["Next-PC selection"]
+    R --> S
+    K --> S
+    O --> S
+    M --> S
+    S --> T(["Clock edge: update state"])
+    T --> A
+
 
 This is a conceptual execution flow. The actual datapath performs many of these steps combinationally in parallel during the same cycle, rather than executing each box as a separate clock cycle.
 
