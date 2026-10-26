@@ -177,6 +177,7 @@ The write-back logic selects the ALU result, load result, or `PC + 4`. `LUI` and
 
 ## Instruction Execution Flowchart
 
+```mermaid
 flowchart TD
     A(["Current PC"]) --> B["Fetch instruction"]
     B --> C["Decode instruction and generate controls"]
@@ -208,7 +209,7 @@ flowchart TD
     S --> T(["Clock edge: update state"])
     T --> A
 
-
+```
 This is a conceptual execution flow. The actual datapath performs many of these steps combinationally in parallel during the same cycle, rather than executing each box as a separate clock cycle.
 
 ## Worked Example 1: ADDI
